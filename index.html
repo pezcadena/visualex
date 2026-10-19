@@ -126,6 +126,17 @@
       <div class="toast pointer-events-none fixed bottom-[58px] left-1/2 z-20 -translate-x-1/2 translate-y-[15px] rounded bg-[#202023] px-[14px] py-[10px] text-[10px] text-white opacity-0 transition-all duration-200" id="toast" role="status"></div>
       <div class="modal-backdrop fixed inset-0 z-30 hidden items-center justify-center bg-[#17171a]/40" id="helpModal"><div class="help-modal relative w-[min(410px,calc(100vw-30px))] rounded-[7px] bg-[#fbfaf7] p-[29px] shadow-2xl"><button class="modal-close absolute top-[13px] right-4 bg-transparent text-[22px] text-[#777]" id="closeHelp">×</button><div class="font-mono text-[9px] font-medium tracking-[1.2px] text-[#8c8b83]">GUÍA RÁPIDA</div><h2 class="my-3 text-[22px] font-bold tracking-[-1px]">El sonido toma forma.</h2><ol class="list-decimal space-y-1 py-0 pr-0 pl-[19px] text-[11px] leading-[1.8] text-[#62615a]"><li><b class="text-ink">Sube</b> tus PNG, WebP o JPG desde el panel o arrastrándolos al lienzo.</li><li><b class="text-ink">Compón</b> añade ondas, espectros o texto. Mueve, gira y cambia el tamaño de los elementos; arrastra las capas para ordenarlas.</li><li><b class="text-ink">Escucha</b> al activar el micrófono. Los efectos pueden dar más énfasis a los picos de bajos.</li></ol><p class="mt-4 text-[9px] leading-[1.6] text-[#919087]">El micrófono necesita permiso del navegador y funciona en una conexión segura (HTTPS o localhost).</p><button class="mic-button mt-4 h-9 w-full rounded bg-ink text-[9px] font-semibold text-white" id="gotIt">¡Entendido!</button></div></div>
     </main>
+    <!--
+      La aplicación usa scripts clásicos compartiendo el ámbito global léxico.
+      Mantén este orden: cada archivo prepara funciones que usa el siguiente.
+    -->
+    <script src="modules/core.js"></script>
+    <script src="modules/layers.js"></script>
+    <script src="modules/inspector.js"></script>
+    <script src="modules/graphics.js"></script>
+    <script src="modules/controls.js"></script>
+    <script src="modules/audio.js"></script>
+    <script src="modules/export.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
