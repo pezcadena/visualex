@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101013" />
+    <title>Ritmo — lienzo reactivo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Orbitron:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+      @theme {
+        --font-sans: "Manrope", sans-serif;
+        --font-mono: "DM Mono", monospace;
+        --color-ink: #19191d;
+        --color-paper: #f4f2ed;
+        --color-lime: #d7f25e;
+        --color-line: #e8e6df;
+      }
+    </style>
+  </head>
+  <body class="m-0 bg-paper font-sans text-[13px] text-ink">
+    <main class="app-shell flex h-screen min-h-screen flex-col overflow-hidden max-[620px]:h-auto max-[620px]:overflow-visible">
+
+      <div class="workspace grid min-h-0 flex-1 grid-cols-[305px_minmax(0,1fr)] max-[800px]:grid-cols-[260px_minmax(0,1fr)] max-[620px]:flex max-[620px]:flex-col">
+        <aside class="sidebar flex min-h-0 flex-col overflow-y-auto border-r border-line bg-[#fbfaf7] px-6 pb-[13px] pt-[31px] max-[800px]:px-[18px] max-[800px]:py-6 max-[620px]:order-2 max-[620px]:overflow-visible max-[620px]:border-r-0 max-[620px]:border-t max-[620px]:border-line">
+
+          <section class="side-section border-line py-[19px]">
+            <div class="section-heading mb-[14px] flex items-center gap-[9px]"><h2 class="m-0 text-[11px] font-bold">Imágenes</h2><span class="h-px flex-1 bg-line"></span></div>
+            <label class="upload-zone flex h-[66px] cursor-pointer items-center gap-[10px] rounded border border-dashed border-[#cfcdc5] px-[11px] transition hover:border-[#9bb13e] hover:bg-[#f7f9ec]" id="uploadZone">
+              <input id="fileInput" class="hidden" type="file" accept="image/png,image/webp,image/jpeg,image/gif" multiple />
+              <span class="grid h-[29px] w-[29px] place-items-center rounded border border-[#deddd6] text-[18px] text-[#777970]">＋</span><span class="flex flex-col gap-[3px]"><strong class="text-[10px] font-bold">Sube tus imágenes</strong><small class="text-[8px] text-[#929189]">PNG con transparencia · también puedes arrastrar</small></span>
+            </label>
+            <div class="asset-list mt-[9px] flex max-h-[175px] flex-col gap-[6px] overflow-auto" id="assetList"><div class="empty-assets p-[6px] text-center text-[9px] text-[#aaa89f]">Tus imágenes aparecerán aquí</div></div>
+            <p class="mb-0 mt-1 text-[8px] text-[#99978f]">Arrastra las capas para cambiar cuál queda delante.</p>
+            <button class="mt-2 flex h-8 w-full items-center justify-center gap-2 rounded border border-[#deddd6] bg-transparent text-[9px] font-semibold text-[#62615a] transition hover:border-[#9bb13e] hover:bg-[#f7f9ec]" id="addWaveform"><span class="text-base">∿</span> Añadir onda de sonido</button>
+            <button class="mt-1 flex h-8 w-full items-center justify-center gap-2 rounded border border-[#deddd6] bg-transparent text-[9px] font-semibold text-[#62615a] transition hover:border-[#9bb13e] hover:bg-[#f7f9ec]" id="addSpectrum"><span class="text-base">▥</span> Añadir espectro de barras</button>
+            <button class="mt-1 flex h-8 w-full items-center justify-center gap-2 rounded border border-[#deddd6] bg-transparent text-[9px] font-semibold text-[#62615a] transition hover:border-[#9bb13e] hover:bg-[#f7f9ec]" id="addText"><span class="text-sm font-bold">T</span> Añadir texto</button>
+          </section>
+
+          <section class="background-section side-section border-t border-line py-[19px] pb-[18px]">
+            <div class="section-heading mb-[14px] flex items-center gap-[9px]"><h2 class="m-0 text-[11px] font-bold">Fondo</h2><span class="h-px flex-1 bg-line"></span></div>
+            <div class="flex items-center justify-between text-[10px] text-[#73736d]"><label for="bgColor">Color del lienzo</label><div class="flex h-[27px] items-center gap-[7px] rounded border border-[#e2e0d9] bg-white px-[5px] py-[3px]"><input class="h-[19px] w-[19px] cursor-pointer border-0 bg-transparent p-0" type="color" id="bgColor" value="#d7f25e" /><label class="flex items-center gap-[2px] font-mono text-[9px] text-[#74746e]" aria-label="Código hexadecimal">#<input class="w-[51px] border-0 bg-transparent p-0 font-mono text-[9px] uppercase text-[#45453f] outline-none" id="bgHex" type="text" value="D7F25E" maxlength="7" spellcheck="false" aria-label="Código hexadecimal del fondo" /></label></div></div>
+            <div class="swatches mt-[10px] flex gap-[7px]" aria-label="Colores sugeridos">
+              <button class="h-[17px] w-[17px] rounded-full border border-black/10 bg-[#d7f25e] transition hover:scale-[1.18]" data-color="#d7f25e" aria-label="Lima"></button>
+              <button class="h-[17px] w-[17px] rounded-full border border-black/10 bg-[#f3eee5] transition hover:scale-[1.18]" data-color="#f3eee5" aria-label="Marfil"></button>
+              <button class="h-[17px] w-[17px] rounded-full border border-black/10 bg-[#b3a4ff] transition hover:scale-[1.18]" data-color="#b3a4ff" aria-label="Lila"></button>
+              <button class="h-[17px] w-[17px] rounded-full border border-black/10 bg-[#ff8b70] transition hover:scale-[1.18]" data-color="#ff8b70" aria-label="Coral"></button>
+              <button class="h-[17px] w-[17px] rounded-full border border-black/10 bg-[#19191d] transition hover:scale-[1.18]" data-color="#19191d" aria-label="Carbón"></button>
+              <button class="h-[17px] w-[17px] rounded-full border border-black/10 bg-[#E5F20E] transition hover:scale-[1.18]" data-color="#E5F20E" aria-label="Amarillo"></button>
+            </div>
+          </section>
+
+          <section class="mic-section side-section border-t border-line py-[19px] pb-[13px]">
+            <div class="section-heading mb-[14px] flex items-center gap-[9px]"><h2 class="m-0 text-[11px] font-bold">El sonido</h2><span class="h-px flex-1 bg-line"></span></div>
+            <div class="rounded border border-[#ebe9e2] bg-[#f4f3ee] p-3">
+              <div class="flex items-center gap-[9px]"><span class="grid h-[29px] w-[29px] place-items-center rounded bg-[#e8edcf] text-[19px] text-[#738927]">⌁</span><div class="flex flex-1 flex-col gap-[3px]"><strong class="text-[10px]" id="micTitle">Micro apagado</strong><small class="text-[8px] text-[#8d8c84]" id="micSubtitle">Activa el micro para empezar</small></div><span class="mic-status h-[6px] w-[6px] rounded-full bg-[#c8c6be]" id="micStatus"></span></div>
+              <button class="mic-button my-[11px] h-8 w-full rounded bg-ink text-[9px] font-semibold text-white transition hover:bg-[#343438]" id="micButton"><span class="mr-1 text-xs">◉</span> Activar micrófono</button>
+              <div class="audio-meter"><div class="meter-label mb-[6px] flex justify-between font-mono text-[8px] text-[#929188]"><span>NIVEL DE AUDIO</span><span id="audioPercent">0%</span></div><div class="h-1 overflow-hidden rounded bg-[#deddd6]"><div class="meter-fill h-full w-0 rounded bg-[#a6c144] transition-[width] duration-75" id="meterFill"></div></div></div>
+              <div class="mic-settings mt-[15px] border-t border-[#e4e2da] pt-3">
+                <label class="slider-label mb-[6px] flex justify-between text-[9px] text-[#73736d]" for="micSensitivity"><span>Sensibilidad</span><span class="font-mono text-[8px] text-[#85847c]" id="sensitivityValue">100%</span></label>
+                <input id="micSensitivity" class="gain-slider h-1 w-full cursor-pointer accent-[#9eb83e]" type="range" min="25" max="250" value="100" />
+                <div class="slider-help mt-[5px] text-[8px] leading-[1.5] text-[#99978f]">Cuánto amplifica el sonido antes de aplicar los efectos.</div>
+                <label class="slider-label mt-[13px] mb-[6px] flex justify-between text-[9px] text-[#73736d]" for="micThreshold"><span>Umbral de activación</span><span class="font-mono text-[8px] text-[#85847c]" id="thresholdValue">3%</span></label>
+                <input id="micThreshold" class="gain-slider h-1 w-full cursor-pointer accent-[#9eb83e]" type="range" min="0" max="30" value="3" />
+                <div class="slider-help mt-[5px] text-[8px] leading-[1.5] text-[#99978f]">Ignora sonidos por debajo de este nivel.</div>
+              </div>
+            </div>
+            <p class="m-0 mt-2 text-[8px] text-[#9a9991]">Tu audio se procesa aquí mismo y nunca se guarda.</p>
+          </section>
+          <footer class="sidebar-footer mt-auto flex items-center gap-[7px] border-t border-line pt-3 text-[9px] text-[#98978f]"><span class="rounded border border-[#dedcd4] px-[5px] py-[2px] font-mono text-[9px]">?</span><span>Explora, prueba, escucha.</span><span class="ml-auto font-mono text-[8px] tracking-[.4px]">RITMO 01</span></footer>
+        </aside>
+        <!-- Contenido Principal -->
+        <section class="canvas-area grid min-h-0 min-w-0 grid-rows-[45px_minmax(0,1fr)_42px] bg-[#edede8] max-[620px]:order-1 max-[620px]:h-[65vh] max-[620px]:min-h-[420px] max-[620px]:grid-rows-[42px_minmax(0,1fr)_38px]">
+          <!-- Topbar -->
+          <div class="flex items-center justify-between border-b border-[#e2e1da] bg-[#f3f2ee] px-[21px] max-[620px]:px-3">
+            <div class="flex items-center gap-[14px]">
+              <button class="tool-button text-[11px] text-[#74746c] hover:text-ink" id="centerButton" title="Centrar imágenes">⌖ 
+                <span class="ml-[3px] text-[9px]">Centrar</span>
+              </button>
+              <span class="h-[15px] w-px bg-[#d9d7d0]"></span>
+              <button class="tool-button text-[11px] text-[#74746c] hover:text-ink" id="fullscreenButton" title="Pantalla completa">⛶ 
+                <span class="ml-[3px] text-[9px]">Pantalla Completa</span>
+              </button>
+            </div>
+          </div>
+          <!-- Canvas -->
+          <div class="stage-wrap min-h-0 p-[18px] max-[620px]:p-[10px]">
+            <div class="stage-grid relative h-full w-full overflow-hidden rounded-[2px] bg-lime transition-colors duration-200" id="stage">
+              <!-- Placeholder empty -->
+              <!-- TODO stageEmpty no se oculta cuando no hay imagenes -->
+              <div class="stage-empty pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center hidden" id="stageEmpty">
+                <div class="relative mb-[18px] grid h-[52px] w-[52px] place-items-center rounded-full border border-[#20201a44] text-[#3c4320]">
+                  <span class="text-[21px]">✳</span>
+                  <i class="absolute h-[25px] w-[72px] rotate-[38deg] rounded-[50%] border border-[#20201a35]"></i>
+                  <i class="absolute h-[25px] w-[72px] -rotate-[38deg] rounded-[50%] border border-[#20201a35]"></i>
+                </div>
+                <h2 class="mb-[6px] text-[14px] font-bold tracking-[-.3px]">Tu lienzo empieza aquí
+                </h2>
+                <p class="m-0 text-[10px] leading-[1.7] text-[#53583d]">Suelta imágenes en cualquier lugar<br />o súbelas desde el panel.
+                </p>
+                <label class="empty-upload pointer-events-auto mt-[14px] cursor-pointer rounded-[3px] border border-[#20201a66] bg-white/15 px-[11px] py-2 text-[9px]">＋ Añadir imágenes
+                  <input class="hidden" type="file" accept="image/png,image/webp,image/jpeg,image/gif" multiple />
+                </label>
+              </div>
+            </div>
+          </div>
+          <!-- Bottombar -->
+          <div class="flex items-center justify-between border-t border-[#e2e1da] bg-[#f3f2ee] px-[21px] text-[9px] text-[#898880] max-[620px]:px-3">
+            <div class="flex items-center gap-[7px]">
+              <span class="text-[13px]">⠿</span> 
+              Arrastra y coloca · Selecciona una imagen para editarla
+            </div>
+            <div class="flex items-center gap-3 font-mono text-[9px] text-[#77766e]">
+              <button class="bg-transparent text-[15px]" id="zoomOut" aria-label="Alejar">−
+              </button>
+              <span id="zoomValue">100%</span>
+              <button class="bg-transparent text-[15px]" id="zoomIn" aria-label="Acercar">＋
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="toast pointer-events-none fixed bottom-[58px] left-1/2 z-20 -translate-x-1/2 translate-y-[15px] rounded bg-[#202023] px-[14px] py-[10px] text-[10px] text-white opacity-0 transition-all duration-200" id="toast" role="status"></div>
+      <div class="modal-backdrop fixed inset-0 z-30 hidden items-center justify-center bg-[#17171a]/40" id="helpModal"><div class="help-modal relative w-[min(410px,calc(100vw-30px))] rounded-[7px] bg-[#fbfaf7] p-[29px] shadow-2xl"><button class="modal-close absolute top-[13px] right-4 bg-transparent text-[22px] text-[#777]" id="closeHelp">×</button><div class="font-mono text-[9px] font-medium tracking-[1.2px] text-[#8c8b83]">GUÍA RÁPIDA</div><h2 class="my-3 text-[22px] font-bold tracking-[-1px]">El sonido toma forma.</h2><ol class="list-decimal space-y-1 py-0 pr-0 pl-[19px] text-[11px] leading-[1.8] text-[#62615a]"><li><b class="text-ink">Sube</b> tus PNG, WebP o JPG desde el panel o arrastrándolos al lienzo.</li><li><b class="text-ink">Compón</b> añade ondas, espectros o texto. Mueve, gira y cambia el tamaño de los elementos; arrastra las capas para ordenarlas.</li><li><b class="text-ink">Escucha</b> al activar el micrófono. Los efectos pueden dar más énfasis a los picos de bajos.</li></ol><p class="mt-4 text-[9px] leading-[1.6] text-[#919087]">El micrófono necesita permiso del navegador y funciona en una conexión segura (HTTPS o localhost).</p><button class="mic-button mt-4 h-9 w-full rounded bg-ink text-[9px] font-semibold text-white" id="gotIt">¡Entendido!</button></div></div>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
